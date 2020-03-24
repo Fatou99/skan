@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:news_reader/core/api/api.dart';
 import 'package:news_reader/presentation/views/Identification/LogIn.dart';
 import 'package:news_reader/presentation/views/home/Home.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:tutorial_project/Home/homeScreen.dart';
@@ -28,8 +29,13 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-
-
+String cin;
+int nom;
+int email;
+int mdp;
+int numb;
+final deviceHeight= MediaQuery.of(context).size.height;
+final deviceWidth= MediaQuery.of(context).size.width;
 
     return Scaffold(
     
@@ -53,10 +59,12 @@ class _SignUpState extends State<SignUp> {
             ),
 
             Positioned(
+              // top:deviceHeight*0.1,
+              // right: deviceWidth*0.005,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: ListView(
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Card(
                       elevation: 4.0,
@@ -70,11 +78,23 @@ class _SignUpState extends State<SignUp> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             /////////////// ID////////////
-                            TextField(
+                            TextFormField(
                               style: TextStyle(color: Color(0xFF000000)),
                               controller: idController,
                               cursorColor: Color(0xFF9b9b9b),
                               keyboardType: TextInputType.number,
+                               autovalidate: true,
+                              validator: (String value) {
+                                if (value.length == 0) {
+                                  return 'Ce champs est obligatoire';
+                                }
+                                return null; 
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  cin = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.card_membership,
@@ -88,11 +108,23 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ),
                             /////////Name////////
-                            TextField(
+                            TextFormField(
                               style: TextStyle(color: Color(0xFF000000)),
                               controller: nameController,
                               cursorColor: Color(0xFF9b9b9b),
                               keyboardType: TextInputType.text,
+                              autovalidate: true,
+                              validator: (String value) {
+                                if (value.length == 0) {
+                                  return 'Ce champs est obligatoire';
+                                }
+                                return null; 
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  nom = value.length;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.account_circle,
@@ -107,11 +139,23 @@ class _SignUpState extends State<SignUp> {
                             ),
 
                             /////////////// Email ////////////
-                            TextField(
+                            TextFormField(
                               style: TextStyle(color: Color(0xFF000000)),
                               controller: mailController,
                               cursorColor: Color(0xFF9b9b9b),
                               keyboardType: TextInputType.emailAddress,
+                              autovalidate: true,
+                              validator: (String value) {
+                                if (value.length == 0) {
+                                  return 'Ce champs est obligatoire';
+                                }
+                                return null; 
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  email = value.length;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.mail,
@@ -126,12 +170,24 @@ class _SignUpState extends State<SignUp> {
                             ),
 
                             /////////////// password ////////////
-                            TextField(
+                            TextFormField(
                               style: TextStyle(color: Color(0xFF000000)),
                               cursorColor: Color(0xFF9b9b9b),
                               controller: passwordController,
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
+                              autovalidate: true,
+                              validator: (String value) {
+                                if (value.length == 0) {
+                                  return 'Ce champs est obligatoire';
+                                }
+                                return null; 
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  mdp = value.length;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.vpn_key,
@@ -144,11 +200,24 @@ class _SignUpState extends State<SignUp> {
                                     fontWeight: FontWeight.normal),
                               ),
                             ),
-                            TextField(
+                            ///////Numero de telephone/////
+                            TextFormField(
                               style: TextStyle(color: Color(0xFF000000)),
                               controller: phoneController,
                               cursorColor: Color(0xFF9b9b9b),
                               keyboardType: TextInputType.phone,
+                              autovalidate: true,
+                              validator: (String value) {
+                                if (value.length == 0) {
+                                  return 'Ce champs est obligatoire';
+                                }
+                                return null;
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  numb = value.length;
+                                });
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.mobile_screen_share,
@@ -188,9 +257,122 @@ class _SignUpState extends State<SignUp> {
                                       borderRadius:
                                           new BorderRadius.circular(20.0)),
                                   onPressed:(){ _isLoading ? null : _handleLogin;
-                                  Future.delayed(const Duration(milliseconds: 500), () {
+                                  print(cin);
+                                    if (cin == null){
+                                      Alert(
+                                        context: context,
+                                        type: AlertType.error,
+                                        title: "Le CIN est obligatoire",
+                                        desc: "Merci de remplir le champ",
+                                        buttons: [
+                                          DialogButton(
+                                              child: Text("Fermer"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              gradient: LinearGradient(colors: [
+                                                Color.fromRGBO(
+                                                    116, 116, 191, 1.0),
+                                                Color.fromRGBO(
+                                                    52, 138, 199, 1.0)
+                                              ])),
+                                        ],
+                                      ).show();
+                                    }
+                                    else
+                                     if (nom == 0) {
+                                      Alert(
+                                        context: context,
+                                        type: AlertType.error,
+                                        title: "Le nom est obligatoire",
+                                        desc: "Merci de remplir le champ",
+                                        buttons: [
+                                          DialogButton(
+                                              child: Text("Fermer"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              gradient: LinearGradient(colors: [
+                                                Color.fromRGBO(
+                                                    116, 116, 191, 1.0),
+                                                Color.fromRGBO(
+                                                    52, 138, 199, 1.0)
+                                              ])),
+                                        ],
+                                      ).show();
+                                    }
+                                    else if (email == 0) {
+                                      Alert(
+                                        context: context,
+                                        type: AlertType.error,
+                                        title: "L'email est obligatoire",
+                                        desc: "Merci de remplir le champ",
+                                        buttons: [
+                                          DialogButton(
+                                              child: Text("Fermer"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              gradient: LinearGradient(colors: [
+                                                Color.fromRGBO(
+                                                    116, 116, 191, 1.0),
+                                                Color.fromRGBO(
+                                                    52, 138, 199, 1.0)
+                                              ])),
+                                        ],
+                                      ).show();
+                                    }
+                                   else if (mdp == 0) {
+                                      Alert(
+                                        context: context,
+                                        type: AlertType.error,
+                                        title: "Le mot de passe est obligatoire",
+                                        desc: "Merci de remplir le champ",
+                                        buttons: [
+                                          DialogButton(
+                                              child: Text("Fermer"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              gradient: LinearGradient(colors: [
+                                                Color.fromRGBO(
+                                                    116, 116, 191, 1.0),
+                                                Color.fromRGBO(
+                                                    52, 138, 199, 1.0)
+                                              ])),
+                                        ],
+                                      ).show();
+                                    }
+                                    else if (numb == 0) {
+                                      Alert(
+                                        context: context,
+                                        type: AlertType.error,
+                                        title: "Le numéro de téléphone est obligatoire",
+                                        desc: "Merci de remplir le champ",
+                                        buttons: [
+                                          DialogButton(
+                                              child: Text("Fermer"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              gradient: LinearGradient(colors: [
+                                                Color.fromRGBO(
+                                                    116, 116, 191, 1.0),
+                                                Color.fromRGBO(
+                                                    52, 138, 199, 1.0)
+                                              ])),
+                                        ],
+                                      ).show();
+                                    }
+                                    else{
+                                  // Future.delayed(
+                                  //   const Duration(milliseconds: 500), () {
                                   Navigator.pushNamed(context, "/Reports");
-                                  });}),
+                                  // }
+                                  // );
+                                  };
+                                  }
+                                  ),
                             ),
                           ],
                         ),
