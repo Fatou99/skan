@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -15,9 +16,15 @@ class _ReportPageState extends State<ReportPage> {
   List<Report> reports;
   List<Report> reportsTrue;
   List<Report> reportsFalse;
+  var list;
+  var random;
+
   @override
   void initState() {
     super.initState();
+    random = Random();
+    list = List.generate(random.nextInt(10), (i) => "Item $i");
+
     reports = new List<Report>();
     reportsTrue = new List<Report>();
     reportsFalse = new List<Report>();
@@ -79,10 +86,23 @@ class _ReportPageState extends State<ReportPage> {
         true));
   }
 
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      // list=List.generate(random.nextInt(10), (i)=> "Item $i");
+      reportsTrue.add(new Report(
+          10.422828,
+          32.910221,
+          "cafe",
+          "https://scontent.ftun7-1.fna.fbcdn.net/v/t1.15752-9/89714805_243938279979275_2983177111482662912_n.jpg?_nc_cat=110&_nc_sid=b96e70&_nc_ohc=1-Ny_hjFphsAX-7RuvX&_nc_ht=scontent.ftun7-1.fna&oh=10150086f59d5a8c31ac964a2ef4d51b&oe=5E9AF4B1",
+          "01:30",
+          true));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
-   final List<bool> gouvernorats = [
+    final List<bool> gouvernorats = [
       false,
       false,
       false,
@@ -111,7 +131,7 @@ class _ReportPageState extends State<ReportPage> {
 
     // print(gouvernorats.length);
 
-  final  List<String> gouvernoratsName = [
+    final List<String> gouvernoratsName = [
       "Ariana",
       "Béja",
       "Ben Arous",
@@ -524,16 +544,15 @@ class _ReportPageState extends State<ReportPage> {
                                             padding: EdgeInsets.fromLTRB(
                                                 10.0, 5.0, 10.0, 5.0),
                                             onPressed: () {
-                                            print(gouvernorats);
+                                              print(gouvernorats);
                                               // setState(() {
-                                                  for (int i = 0; i < 24; i++) {
+                                              for (int i = 0; i < 24; i++) {
                                                 if (gouvernorats[i] == true) {
                                                   gouvernoratSelected
                                                       .add(gouvernoratsName[i]);
-                                                  
                                                 }
                                               }
-                                                Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
                                               // });
                                             },
                                             child: Text("Save",
@@ -604,13 +623,48 @@ class _ReportPageState extends State<ReportPage> {
       ]));
     }
 
+    bool val=false;
     return SafeArea(
         child: Scaffold(
+      // bottomNavigationBar: 
+      // new ButtonBar(
+      //   // buttonTextTheme: 
+      //   children: <Widget>[
+      //     Text("hh"),
+      //     Switch(
+      //       value: val,
+      //       activeColor: Colors.green,
+      //       onChanged: (bool e) {
+      //         if (e) {
+      //           val = true;
+                // ListView.builder(
+                //   scrollDirection: Axis.vertical,
+                //   itemCount: reportsFalse.length,
+                //   itemBuilder:(BuildContext context, int index) {
+                //      final item = reportsFalse[index];
+
+                //     return AnimationConfiguration.staggeredList(
+                //       position: index,
+                //       duration: const Duration(milliseconds: 1500),
+                //       child: SlideAnimation(
+                //         horizontalOffset: -1000.0,
+                //         //  child: SlideAnimation(
+                //         child:  ReportRow(item),
+                //       ),
+                //     );
+                //   });
+      //         } else {
+      //           print("false");
+      //         }
+      //       },
+      //     ),
+      //   ],
+      // ),
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red[300],
         title: Text('Les dépassements'),
         actions: <Widget>[
-           IconButton(
+          IconButton(
             tooltip: 'Recherche',
             icon: const Icon(Icons.search),
             onPressed: () {
@@ -622,50 +676,62 @@ class _ReportPageState extends State<ReportPage> {
       drawer: Theme(
           data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
           child: sideNav()),
-      body: makeBody(context),
+      body: RefreshIndicator(
+        child: makeBody(context),
+        onRefresh: refreshList,
+      ),
     ));
   }
 
- 
   Widget makeBody(BuildContext context) {
     return Container(
-        color: /*Color(0xFF7A4D1D)*/ Colors.black87,
-        child: AnimationLimiter(
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: reportsTrue.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = reportsTrue[index];
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 1500),
-                    child: SlideAnimation(
-                      horizontalOffset: -1000.0,
-                      //  child: SlideAnimation(
-                      child: Dismissible(
-                        // Show a red background as the item is swiped away.
-                        background: Container(
-                          color: Colors.red,
-                        ),
-                        key: UniqueKey(),
-                        onDismissed: (direction) {
-                          if (this.mounted) {
-                            setState(() {
-                              reportsFalse.add(item);
-                              reportsTrue.removeAt(index);
-                            });
-                          }
-
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text("Elément masqué avec succès")));
-                        },
-                        child: ReportRow(item),
-                      ),
-                      // ),
+      decoration: new BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.0, 0.4, 0.9],
+          colors: [
+            Colors.teal,
+            Color.fromRGBO(60, 157, 155, 1),
+            Color(0xFFFF3F1A),
+          ],
+        ),
+      ),
+      child: AnimationLimiter(
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: reportsTrue.length,
+            itemBuilder: (BuildContext context, int index) {
+              final item = reportsTrue[index];
+              return AnimationConfiguration.staggeredList(
+                position: index,
+                duration: const Duration(milliseconds: 1500),
+                child: SlideAnimation(
+                  horizontalOffset: -1000.0,
+                  //  child: SlideAnimation(
+                  child: Dismissible(
+                    // Show a red background as the item is swiped away.
+                    background: Container(
+                      color: Colors.red,
                     ),
-                  );
-                })));
+                    key: UniqueKey(),
+                    onDismissed: (direction) {
+                      if (this.mounted) {
+                        setState(() {
+                          reportsFalse.add(item);
+                          reportsTrue.removeAt(index);
+                        });
+                      }
+
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("Elément masqué avec succès")));
+                    },
+                    child: ReportRow(item),
+                  ),
+                ),
+              );
+            }),
+      ),
+    );
   }
-
-
 }

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:news_reader/core/model/Report.dart';
+import 'package:news_reader/presentation/result/results.dart';
+import 'package:news_reader/presentation/search/search.dart';
 
 class DataSearch extends SearchDelegate<String> {
   final List<String> gouvernoratsName = [
@@ -35,6 +39,8 @@ class DataSearch extends SearchDelegate<String> {
     "Tataouine",
     "Tozeur",
   ];
+
+  Search search = new Search();
   
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -64,21 +70,30 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // show some result based on the selection
+search.setItem(this.query);
+List<Report> results=search.getResults();
     return Card(
-        color: Colors.red,
+        color: Colors.grey,
         shape: RoundedRectangleBorder(),
         child: Center(
-          child: Column(
-            children: <Widget>[
-              
-              Text(this.query,
-                  style: Theme.of(context)
-                      .textTheme
-                      .display2
-                      .copyWith(fontWeight: FontWeight.normal)),
-            ],
-          ),
+          child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: results.length,
+                itemBuilder:(BuildContext context, int index) {
+                   final item = results[index];
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 1500),
+                    child: SlideAnimation(
+                      horizontalOffset: -1000.0,
+                      //  child: SlideAnimation(
+                      child:  ResultRow(item),                    
+                    ),
+                  );
+                })
+
         ));
+    // return(Text(query));
   }
 
   @override
@@ -89,6 +104,7 @@ class DataSearch extends SearchDelegate<String> {
         : gouvernoratsName
             .where((p) => p.toUpperCase().startsWith(query.toUpperCase()))
             .toList();
+          
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
