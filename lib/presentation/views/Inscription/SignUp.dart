@@ -24,21 +24,19 @@ class _SignUpState extends State<SignUp> {
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-
+  String cin;
+  String nom;
+  String email;
+  String mdp;
+  String numb;
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-String cin;
-int nom;
-int email;
-int mdp;
-int numb;
-final deviceHeight= MediaQuery.of(context).size.height;
-final deviceWidth= MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-    
       body: Container(
         child: Stack(
           children: <Widget>[
@@ -83,12 +81,12 @@ final deviceWidth= MediaQuery.of(context).size.width;
                               controller: idController,
                               cursorColor: Color(0xFF9b9b9b),
                               keyboardType: TextInputType.number,
-                               autovalidate: true,
+                              autovalidate: true,
                               validator: (String value) {
                                 if (value.length == 0) {
                                   return 'Ce champs est obligatoire';
                                 }
-                                return null; 
+                                return null;
                               },
                               onChanged: (String value) {
                                 setState(() {
@@ -118,11 +116,11 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                 if (value.length == 0) {
                                   return 'Ce champs est obligatoire';
                                 }
-                                return null; 
+                                return null;
                               },
                               onChanged: (String value) {
                                 setState(() {
-                                  nom = value.length;
+                                  nom = value;
                                 });
                               },
                               decoration: InputDecoration(
@@ -149,11 +147,11 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                 if (value.length == 0) {
                                   return 'Ce champs est obligatoire';
                                 }
-                                return null; 
+                                return null;
                               },
                               onChanged: (String value) {
                                 setState(() {
-                                  email = value.length;
+                                  email = value;
                                 });
                               },
                               decoration: InputDecoration(
@@ -181,11 +179,11 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                 if (value.length == 0) {
                                   return 'Ce champs est obligatoire';
                                 }
-                                return null; 
+                                return null;
                               },
                               onChanged: (String value) {
                                 setState(() {
-                                  mdp = value.length;
+                                  mdp = value;
                                 });
                               },
                               decoration: InputDecoration(
@@ -215,7 +213,7 @@ final deviceWidth= MediaQuery.of(context).size.width;
                               },
                               onChanged: (String value) {
                                 setState(() {
-                                  numb = value.length;
+                                  numb = value;
                                 });
                               },
                               decoration: InputDecoration(
@@ -256,9 +254,10 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                   shape: new RoundedRectangleBorder(
                                       borderRadius:
                                           new BorderRadius.circular(20.0)),
-                                  onPressed:(){ _isLoading ? null : _handleLogin;
-                                  print(cin);
-                                    if (cin == null){
+                                  onPressed: () {
+                                    _isLoading ? null : _handleLogin;
+                                    print(cin);
+                                    if (cin == null) {
                                       Alert(
                                         context: context,
                                         type: AlertType.error,
@@ -278,9 +277,7 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                               ])),
                                         ],
                                       ).show();
-                                    }
-                                    else
-                                     if (nom == 0) {
+                                    } else if (nom == null) {
                                       Alert(
                                         context: context,
                                         type: AlertType.error,
@@ -300,8 +297,7 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                               ])),
                                         ],
                                       ).show();
-                                    }
-                                    else if (email == 0) {
+                                    } else if (email == null) {
                                       Alert(
                                         context: context,
                                         type: AlertType.error,
@@ -321,12 +317,12 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                               ])),
                                         ],
                                       ).show();
-                                    }
-                                   else if (mdp == 0) {
+                                    } else if (mdp == null) {
                                       Alert(
                                         context: context,
                                         type: AlertType.error,
-                                        title: "Le mot de passe est obligatoire",
+                                        title:
+                                            "Le mot de passe est obligatoire",
                                         desc: "Merci de remplir le champ",
                                         buttons: [
                                           DialogButton(
@@ -342,12 +338,12 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                               ])),
                                         ],
                                       ).show();
-                                    }
-                                    else if (numb == 0) {
+                                    } else if (numb == null) {
                                       Alert(
                                         context: context,
                                         type: AlertType.error,
-                                        title: "Le numéro de téléphone est obligatoire",
+                                        title:
+                                            "Le numéro de téléphone est obligatoire",
                                         desc: "Merci de remplir le champ",
                                         buttons: [
                                           DialogButton(
@@ -363,16 +359,15 @@ final deviceWidth= MediaQuery.of(context).size.width;
                                               ])),
                                         ],
                                       ).show();
+                                    } else {
+                                      // Future.delayed(
+                                      //   const Duration(milliseconds: 500), () {
+                                      Navigator.pushNamed(context, "/Reports");
+                                      // }
+                                      // );
                                     }
-                                    else{
-                                  // Future.delayed(
-                                  //   const Duration(milliseconds: 500), () {
-                                  Navigator.pushNamed(context, "/Reports");
-                                  // }
-                                  // );
-                                  };
-                                  }
-                                  ),
+                                    ;
+                                  }),
                             ),
                           ],
                         ),
