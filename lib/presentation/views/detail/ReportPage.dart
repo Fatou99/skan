@@ -571,6 +571,9 @@ bool value=false;
                                                 10.0, 5.0, 10.0, 5.0),
                                             onPressed: () {
                                               setState(() {
+                                                  for (int i = 0; i < 24; i++) {
+                                                    gouvernorats[i]=false;
+                                                  }
                                                 Navigator.of(context).pop();
                                               });
                                             },
