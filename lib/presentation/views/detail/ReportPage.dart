@@ -18,7 +18,7 @@ class _ReportPageState extends State<ReportPage> {
   List<Report> reportsFalse;
   var list;
   var random;
-
+bool value=false;
   @override
   void initState() {
     super.initState();
@@ -623,43 +623,36 @@ class _ReportPageState extends State<ReportPage> {
       ]));
     }
 
-    bool val=false;
     return SafeArea(
         child: Scaffold(
-      // bottomNavigationBar: 
-      // new ButtonBar(
-      //   // buttonTextTheme: 
-      //   children: <Widget>[
-      //     Text("hh"),
-      //     Switch(
-      //       value: val,
-      //       activeColor: Colors.green,
-      //       onChanged: (bool e) {
-      //         if (e) {
-      //           val = true;
-                // ListView.builder(
-                //   scrollDirection: Axis.vertical,
-                //   itemCount: reportsFalse.length,
-                //   itemBuilder:(BuildContext context, int index) {
-                //      final item = reportsFalse[index];
-
-                //     return AnimationConfiguration.staggeredList(
-                //       position: index,
-                //       duration: const Duration(milliseconds: 1500),
-                //       child: SlideAnimation(
-                //         horizontalOffset: -1000.0,
-                //         //  child: SlideAnimation(
-                //         child:  ReportRow(item),
-                //       ),
-                //     );
-                //   });
-      //         } else {
-      //           print("false");
-      //         }
-      //       },
-      //     ),
-      //   ],
-      // ),
+      bottomNavigationBar: Container(
+        color: Colors.red[300],
+        child: new ButtonBar(
+          // buttonTextTheme:
+          children: <Widget>[
+            Text("Cliquez pour voir les rapports cachés",
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold)),
+            Switch(
+              value: value,
+              activeColor: Colors.green,
+              onChanged: (bool e) {
+                if (e) {
+                  setState(() {
+                     value = true;
+                
+                  });
+                 
+                } else {
+                  setState(() {
+                    value=false;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.red[300],
         title: Text('Les dépassements'),
@@ -698,7 +691,26 @@ class _ReportPageState extends State<ReportPage> {
         ),
       ),
       child: AnimationLimiter(
-        child: ListView.builder(
+        child: 
+        (value) ?
+            ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: reportsFalse.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = reportsFalse[index];
+
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: 1500),
+                          child: SlideAnimation(
+                            horizontalOffset: -1000.0,
+                            //  child: SlideAnimation(
+                            child: ReportRow(item),
+                          ),
+                        );
+                      })
+                      :
+        ListView.builder(
             scrollDirection: Axis.vertical,
             itemCount: reportsTrue.length,
             itemBuilder: (BuildContext context, int index) {
